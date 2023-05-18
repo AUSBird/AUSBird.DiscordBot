@@ -8,6 +8,21 @@ namespace AUSBird.DiscordBot.Services;
 
 public partial class DiscordHostedService
 {
+    private void LogEventHandling(string eventName, int handlerCount)
+    {
+        _logger.LogTrace("Handling event {EvantName} using {HandlerCount} handler(s)", eventName, handlerCount);
+    }
+
+    private void LogEventHandlerCalled(string eventName, string handlerName)
+    {
+        _logger.LogDebug("Calling {HandlerName} to handle {EventName} event", handlerName, eventName);
+    }
+
+    private string GetHandlerName(IDiscordEvent eventHandler)
+    {
+        return eventHandler.GetType().FullName ?? eventHandler.GetType().Name;
+    }
+
     #region Discord Reaction Events
 
     private async Task OnReactionAdded(Cacheable<IUserMessage, ulong> message,
@@ -17,7 +32,6 @@ public partial class DiscordHostedService
         LogEventHandling(nameof(IDiscordReactionAddedEvent), eventHandlers.Count);
 
         foreach (var eventHandler in eventHandlers)
-        {
             try
             {
                 LogEventHandlerCalled(nameof(IDiscordReactionAddedEvent), GetHandlerName(eventHandler));
@@ -27,7 +41,6 @@ public partial class DiscordHostedService
             {
                 _logger.LogError(ex, "An unhandled exception was encountered while handling reaction added event");
             }
-        }
     }
 
     private async Task OnReactionsCleared(Cacheable<IUserMessage, ulong> message,
@@ -37,7 +50,6 @@ public partial class DiscordHostedService
         LogEventHandling(nameof(IDiscordReactionClearedEvent), eventHandlers.Count);
 
         foreach (var eventHandler in eventHandlers)
-        {
             try
             {
                 LogEventHandlerCalled(nameof(IDiscordReactionClearedEvent), GetHandlerName(eventHandler));
@@ -47,7 +59,6 @@ public partial class DiscordHostedService
             {
                 _logger.LogError(ex, "An unhandled exception was encountered while handling reaction cleared event");
             }
-        }
     }
 
     private async Task OnReactionRemoved(Cacheable<IUserMessage, ulong> message,
@@ -57,7 +68,6 @@ public partial class DiscordHostedService
         LogEventHandling(nameof(IDiscordReactionRemovedEvent), eventHandlers.Count);
 
         foreach (var eventHandler in eventHandlers)
-        {
             try
             {
                 LogEventHandlerCalled(nameof(IDiscordReactionRemovedEvent), GetHandlerName(eventHandler));
@@ -67,7 +77,6 @@ public partial class DiscordHostedService
             {
                 _logger.LogError(ex, "An unhandled exception was encountered while handling reaction removed event");
             }
-        }
     }
 
     private async Task OnReactionsRemovedForEmote(Cacheable<IUserMessage, ulong> message,
@@ -77,7 +86,6 @@ public partial class DiscordHostedService
         LogEventHandling(nameof(IDiscordReactionRemovedForEmoteEvent), eventHandlers.Count);
 
         foreach (var eventHandler in eventHandlers)
-        {
             try
             {
                 LogEventHandlerCalled(nameof(IDiscordReactionRemovedForEmoteEvent), GetHandlerName(eventHandler));
@@ -88,7 +96,6 @@ public partial class DiscordHostedService
                 _logger.LogError(ex,
                     "An unhandled exception was encountered while handling reaction removed for emote event");
             }
-        }
     }
 
     #endregion
@@ -101,7 +108,6 @@ public partial class DiscordHostedService
         LogEventHandling(nameof(IDiscordRoleCreatedEvent), eventHandlers.Count);
 
         foreach (var eventHandler in eventHandlers)
-        {
             try
             {
                 LogEventHandlerCalled(nameof(IDiscordRoleCreatedEvent), GetHandlerName(eventHandler));
@@ -111,7 +117,6 @@ public partial class DiscordHostedService
             {
                 _logger.LogError(ex, "An unhandled exception was encountered while handling role created event");
             }
-        }
     }
 
     private async Task OnRoleDeleted(SocketRole role)
@@ -120,7 +125,6 @@ public partial class DiscordHostedService
         LogEventHandling(nameof(IDiscordRoleDeletedEvent), eventHandlers.Count);
 
         foreach (var eventHandler in eventHandlers)
-        {
             try
             {
                 LogEventHandlerCalled(nameof(IDiscordRoleDeletedEvent), GetHandlerName(eventHandler));
@@ -130,7 +134,6 @@ public partial class DiscordHostedService
             {
                 _logger.LogError(ex, "An unhandled exception was encountered while handling role deleted event");
             }
-        }
     }
 
     private async Task OnRoleUpdated(SocketRole before, SocketRole after)
@@ -139,7 +142,6 @@ public partial class DiscordHostedService
         LogEventHandling(nameof(IDiscordRoleUpdatedEvent), eventHandlers.Count);
 
         foreach (var eventHandler in eventHandlers)
-        {
             try
             {
                 LogEventHandlerCalled(nameof(IDiscordRoleUpdatedEvent), GetHandlerName(eventHandler));
@@ -149,7 +151,6 @@ public partial class DiscordHostedService
             {
                 _logger.LogError(ex, "An unhandled exception was encountered while handling role updated event");
             }
-        }
     }
 
     #endregion
@@ -162,7 +163,6 @@ public partial class DiscordHostedService
         LogEventHandling(nameof(IDiscordUserBannedEvent), eventHandlers.Count);
 
         foreach (var eventHandler in eventHandlers)
-        {
             try
             {
                 LogEventHandlerCalled(nameof(IDiscordUserBannedEvent), GetHandlerName(eventHandler));
@@ -172,7 +172,6 @@ public partial class DiscordHostedService
             {
                 _logger.LogError(ex, "An unhandled exception was encountered while handling user banned event");
             }
-        }
     }
 
     private async Task OnUserJoined(SocketGuildUser user)
@@ -181,7 +180,6 @@ public partial class DiscordHostedService
         LogEventHandling(nameof(IDiscordUserJoinedEvent), eventHandlers.Count);
 
         foreach (var eventHandler in eventHandlers)
-        {
             try
             {
                 LogEventHandlerCalled(nameof(IDiscordUserJoinedEvent), GetHandlerName(eventHandler));
@@ -191,7 +189,6 @@ public partial class DiscordHostedService
             {
                 _logger.LogError(ex, "An unhandled exception was encountered while handling user banned event");
             }
-        }
     }
 
     private async Task OnUserLeft(SocketGuild user, SocketUser guild)
@@ -200,7 +197,6 @@ public partial class DiscordHostedService
         LogEventHandling(nameof(IDiscordUserLeftEvent), eventHandlers.Count);
 
         foreach (var eventHandler in eventHandlers)
-        {
             try
             {
                 LogEventHandlerCalled(nameof(IDiscordUserLeftEvent), GetHandlerName(eventHandler));
@@ -210,7 +206,6 @@ public partial class DiscordHostedService
             {
                 _logger.LogError(ex, "An unhandled exception was encountered while handling user left event");
             }
-        }
     }
 
     private async Task OnUserUnbanned(SocketUser user, SocketGuild guild)
@@ -219,7 +214,6 @@ public partial class DiscordHostedService
         LogEventHandling(nameof(IDiscordUserUnbannedEvent), eventHandlers.Count);
 
         foreach (var eventHandler in eventHandlers)
-        {
             try
             {
                 LogEventHandlerCalled(nameof(IDiscordUserUnbannedEvent), GetHandlerName(eventHandler));
@@ -229,7 +223,6 @@ public partial class DiscordHostedService
             {
                 _logger.LogError(ex, "An unhandled exception was encountered while handling user unbanned event");
             }
-        }
     }
 
     private async Task OnUserUpdated(SocketUser before, SocketUser after)
@@ -238,7 +231,6 @@ public partial class DiscordHostedService
         LogEventHandling(nameof(IDiscordUserUpdatedEvent), eventHandlers.Count);
 
         foreach (var eventHandler in eventHandlers)
-        {
             try
             {
                 LogEventHandlerCalled(nameof(IDiscordUserUpdatedEvent), GetHandlerName(eventHandler));
@@ -248,21 +240,7 @@ public partial class DiscordHostedService
             {
                 _logger.LogError(ex, "An unhandled exception was encountered while handling user updated event");
             }
-        }
     }
 
     #endregion
-
-    private void LogEventHandling(string eventName, int handlerCount)
-    {
-        _logger.LogTrace("Handling event {EvantName} using {HandlerCount} handler(s)", eventName, handlerCount);
-    }
-
-    private void LogEventHandlerCalled(string eventName, string handlerName)
-    {
-        _logger.LogDebug("Calling {HandlerName} to handle {EventName} event", handlerName, eventName);
-    }
-    
-    private string GetHandlerName(IDiscordEvent eventHandler) =>
-        eventHandler.GetType().FullName ?? eventHandler.GetType().Name;
 }

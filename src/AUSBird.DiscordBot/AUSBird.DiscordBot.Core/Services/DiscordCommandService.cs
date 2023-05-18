@@ -105,14 +105,20 @@ public class DiscordCommandService : IDiscordCommandService, IDisposable
         }
     }
 
-    public IEnumerable<string> ListSlashCommandIds() =>
-        GetModules<IGlobalSlashCommand>().Select(x => x.SlashCommandId);
+    public IEnumerable<string> ListSlashCommandIds()
+    {
+        return GetModules<IGlobalSlashCommand>().Select(x => x.SlashCommandId);
+    }
 
-    public IEnumerable<string> ListUserCommandIds() =>
-        GetModules<IGlobalUserCommand>().Select(x => x.UserCommandId);
+    public IEnumerable<string> ListUserCommandIds()
+    {
+        return GetModules<IGlobalUserCommand>().Select(x => x.UserCommandId);
+    }
 
-    public IEnumerable<string> ListMessageCommandIds() =>
-        GetModules<IGlobalMessageCommand>().Select(x => x.MessageCommandId);
+    public IEnumerable<string> ListMessageCommandIds()
+    {
+        return GetModules<IGlobalMessageCommand>().Select(x => x.MessageCommandId);
+    }
 
     public async Task<IEnumerable<ApplicationCommandProperties>> BuildCommandsModulesAsync()
     {
@@ -131,24 +137,37 @@ public class DiscordCommandService : IDiscordCommandService, IDisposable
         return slashCommands;
     }
 
-
-    private IEnumerable<TCommand> GetModules<TCommand>() where TCommand : IDiscordCommand =>
-        _serviceScope.ServiceProvider.GetServices<TCommand>();
-
-    private ISlashCommand? GetSlashCommandModule(string name) => GetModules<ISlashCommand>()
-        .FirstOrDefault(x => x.SlashCommandId == name);
-
-    private IUserCommand? GetUserCommandModule(string name) => GetModules<IUserCommand>()
-        .FirstOrDefault(x => x.UserCommandId == name);
-
-    private IMessageCommand? GetMessageCommandModule(string name) => GetModules<IMessageCommand>()
-        .FirstOrDefault(x => x.MessageCommandId == name);
-
-    private ICommandAutocomplete? GetAutocompleteCommandModule(string name) =>
-        GetModules<ICommandAutocomplete>().FirstOrDefault(x => x.SlashCommandId == name);
-
     public void Dispose()
     {
         _serviceScope.Dispose();
+    }
+
+
+    private IEnumerable<TCommand> GetModules<TCommand>() where TCommand : IDiscordCommand
+    {
+        return _serviceScope.ServiceProvider.GetServices<TCommand>();
+    }
+
+    private ISlashCommand? GetSlashCommandModule(string name)
+    {
+        return GetModules<ISlashCommand>()
+            .FirstOrDefault(x => x.SlashCommandId == name);
+    }
+
+    private IUserCommand? GetUserCommandModule(string name)
+    {
+        return GetModules<IUserCommand>()
+            .FirstOrDefault(x => x.UserCommandId == name);
+    }
+
+    private IMessageCommand? GetMessageCommandModule(string name)
+    {
+        return GetModules<IMessageCommand>()
+            .FirstOrDefault(x => x.MessageCommandId == name);
+    }
+
+    private ICommandAutocomplete? GetAutocompleteCommandModule(string name)
+    {
+        return GetModules<ICommandAutocomplete>().FirstOrDefault(x => x.SlashCommandId == name);
     }
 }

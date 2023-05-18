@@ -25,18 +25,13 @@ public static class DiscordServiceExtensions
         return collection;
     }
 
-    
-    
-    
-    
-    
     public static IServiceCollection AddDiscordModule<TModule>(this IServiceCollection collection)
     {
         var interfaces = typeof(TModule).GetInterfaces();
-        
-        if(interfaces.Contains(typeof(IDiscordCommand))) AddDiscordCommandModule(collection, typeof(TModule));
-        if(interfaces.Contains(typeof(IDiscordEvent))) AddDiscordEventModule(collection, typeof(TModule));
-        if(interfaces.Contains(typeof(IDiscordInteraction))) AddDiscordInteractionModule(collection, typeof(TModule));
+
+        if (interfaces.Contains(typeof(IDiscordCommand))) AddDiscordCommandModule(collection, typeof(TModule));
+        if (interfaces.Contains(typeof(IDiscordEvent))) AddDiscordEventModule(collection, typeof(TModule));
+        if (interfaces.Contains(typeof(IDiscordInteraction))) AddDiscordInteractionModule(collection, typeof(TModule));
         return collection;
     }
 
@@ -51,7 +46,6 @@ public static class DiscordServiceExtensions
     {
         var interfaces = moduleType.GetInterfaces();
         if (interfaces.Contains(typeof(IDiscordCommand)) && moduleType.IsClass)
-        {
             foreach (var type in interfaces)
             {
                 #region Base Interfaces
@@ -109,7 +103,6 @@ public static class DiscordServiceExtensions
 
                 #endregion
             }
-        }
     }
 
     public static IServiceCollection AddDiscordEventModule<TEventModule>(this IServiceCollection collection)

@@ -15,7 +15,7 @@ public class DiscordServiceConfig
         var endId = startId + ShardsPerNode;
 
         var shardIds = new List<int>();
-        for (int id = startId; id < endId && id < TotalShards; id++) shardIds.Add(id);
+        for (var id = startId; id < endId && id < TotalShards; id++) shardIds.Add(id);
 
         return shardIds.ToArray();
     }

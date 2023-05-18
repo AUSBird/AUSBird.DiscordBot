@@ -8,10 +8,10 @@ namespace AUSBird.DiscordBot.Services;
 
 public class DiscordService : IDiscordService
 {
-    private readonly DiscordServiceConfig _options;
-    private readonly ILogger<DiscordService> _logger;
-    private readonly ILogger<DiscordShardedClient> _discordLogger;
     private readonly DiscordShardedClient _discordClient;
+    private readonly ILogger<DiscordShardedClient> _discordLogger;
+    private readonly ILogger<DiscordService> _logger;
+    private readonly DiscordServiceConfig _options;
 
     public DiscordService(IOptions<DiscordServiceConfig> options, ILoggerFactory loggerFactory)
     {
@@ -19,13 +19,18 @@ public class DiscordService : IDiscordService
         _logger = loggerFactory.CreateLogger<DiscordService>();
         _options = options.Value;
 
-        _discordClient = new DiscordShardedClient(_options.GetShardIds(), new DiscordSocketConfig()
+        _discordClient = new DiscordShardedClient(_options.GetShardIds(), new DiscordSocketConfig
         {
             GatewayIntents = GatewayIntents.AllUnprivileged | GatewayIntents.GuildMembers,
             TotalShards = _options.TotalShards
         });
         _discordClient.ShardReady += OnShardReady;
         _discordClient.Log += OnLog;
+    }
+
+    public void Dispose()
+    {
+        _discordClient.Dispose();
     }
 
     private async Task OnShardReady(DiscordSocketClient shard)
@@ -80,15 +85,14 @@ public class DiscordService : IDiscordService
         await _discordClient.StopAsync();
     }
 
-    public DiscordShardedClient GetDiscordClient() => _discordClient;
+    public DiscordShardedClient GetDiscordClient()
+    {
+        return _discordClient;
+    }
+
     public int NodeId => _options.NodeId;
     public int ShardsPerNode => _options.ShardsPerNode;
     public int TotalShards => _options.ShardsPerNode;
 
     #endregion
-    
-    public void Dispose()
-    {
-        _discordClient.Dispose();
-    }
 }

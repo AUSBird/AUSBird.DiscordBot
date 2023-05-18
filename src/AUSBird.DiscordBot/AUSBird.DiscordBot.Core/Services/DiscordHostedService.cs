@@ -1,6 +1,5 @@
 using Discord;
 using Discord.WebSocket;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -9,8 +8,8 @@ namespace AUSBird.DiscordBot.Services;
 public partial class DiscordHostedService : IHostedService, IDisposable
 {
     private readonly IDiscordCommandService _commandService;
-    private readonly IDiscordEventService _eventService;
     private readonly IDiscordService _discordService;
+    private readonly IDiscordEventService _eventService;
     private readonly IDiscordInteractionService _interactionService;
     private readonly ILogger<DiscordHostedService> _logger;
 

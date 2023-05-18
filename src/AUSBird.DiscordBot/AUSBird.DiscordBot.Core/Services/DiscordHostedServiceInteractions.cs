@@ -6,6 +6,17 @@ namespace AUSBird.DiscordBot.Services;
 
 public partial class DiscordHostedService
 {
+    private static async Task ReplyWithErrorEmbed(IDiscordInteraction interaction)
+    {
+        var errorEmbed = new EmbedBuilder();
+        errorEmbed.Color = Color.DarkRed;
+        errorEmbed.Title = "An error occured while executing your command";
+
+        if (interaction.HasResponded)
+            await interaction.DeleteOriginalResponseAsync();
+        await interaction.RespondAsync(embed: errorEmbed.Build(), ephemeral: true);
+    }
+
     #region Discord Interaction Events
 
     private async Task OnSlashCommandExecuted(SocketSlashCommand command)
@@ -59,7 +70,7 @@ public partial class DiscordHostedService
             await autocomplete.RespondAsync();
         }
     }
-    
+
     private async Task OnModalSubmitted(SocketModal modal)
     {
         try
@@ -87,15 +98,4 @@ public partial class DiscordHostedService
     }
 
     #endregion
-    
-    private static async Task ReplyWithErrorEmbed(IDiscordInteraction interaction)
-    {
-        var errorEmbed = new EmbedBuilder();
-        errorEmbed.Color = Color.DarkRed;
-        errorEmbed.Title = "An error occured while executing your command";
-        
-        if (interaction.HasResponded)
-            await interaction.DeleteOriginalResponseAsync();
-        await interaction.RespondAsync(embed: errorEmbed.Build(), ephemeral: true);
-    }
 }

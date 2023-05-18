@@ -68,15 +68,17 @@ public class DiscordInteractionService : IDiscordInteractionService, IDisposable
         }
     }
 
-    #region Helpers
-
-    private IEnumerable<TInteraction> GetModules<TInteraction>() where TInteraction : Interfaces.IDiscordInteraction =>
-        _serviceScope.ServiceProvider.GetServices<TInteraction>();
-
-    #endregion
-
     public void Dispose()
     {
         _serviceScope.Dispose();
     }
+
+    #region Helpers
+
+    private IEnumerable<TInteraction> GetModules<TInteraction>() where TInteraction : IDiscordInteraction
+    {
+        return _serviceScope.ServiceProvider.GetServices<TInteraction>();
+    }
+
+    #endregion
 }
