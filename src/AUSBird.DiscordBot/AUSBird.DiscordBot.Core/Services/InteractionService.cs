@@ -8,15 +8,15 @@ using IDiscordInteraction = AUSBird.DiscordBot.Abstraction.Modules.IDiscordInter
 
 namespace AUSBird.DiscordBot.Services;
 
-public class DiscordInteractionService : IDiscordInteractionService, IDisposable
+public class InteractionService : IInteractionService
 {
-    private readonly ILogger<DiscordInteractionService> _logger;
-    private readonly IServiceScope _serviceScope;
+    private readonly ILogger<InteractionService> _logger;
+    private readonly IServiceProvider _serviceProvider;
 
-    public DiscordInteractionService(ILogger<DiscordInteractionService> logger, IServiceScopeFactory scopeFactory)
+    public InteractionService(ILogger<InteractionService> logger, IServiceProvider serviceProvider)
     {
         _logger = logger;
-        _serviceScope = scopeFactory.CreateScope();
+        _serviceProvider = serviceProvider;
     }
 
     public async Task ModalSubmittedAsync(SocketModal modal)
@@ -69,16 +69,11 @@ public class DiscordInteractionService : IDiscordInteractionService, IDisposable
         }
     }
 
-    public void Dispose()
-    {
-        _serviceScope.Dispose();
-    }
-
     #region Helpers
 
     private IEnumerable<TInteraction> GetModules<TInteraction>() where TInteraction : IDiscordInteraction
     {
-        return _serviceScope.ServiceProvider.GetServices<TInteraction>();
+        return _serviceProvider.GetServices<TInteraction>();
     }
 
     #endregion

@@ -1,5 +1,4 @@
 using AUSBird.DiscordBot.Abstraction.Modules;
-using AUSBird.DiscordBot.Abstraction.Modules.CommandAutocomplete;
 using AUSBird.DiscordBot.Abstraction.Modules.Events;
 using AUSBird.DiscordBot.Abstraction.Modules.Interactions;
 using AUSBird.DiscordBot.Abstraction.Modules.MessageCommands;
@@ -11,6 +10,12 @@ namespace AUSBird.DiscordBot.Abstraction.Extensions;
 
 public static class ModuleExtensions
 {
+    public static IEnumerable<TCommand> GetModules<TCommand>(this IServiceProvider services)
+        where TCommand : IDiscordCommand
+    {
+        return services.GetServices<TCommand>();
+    }
+    
     public static IServiceCollection AddDiscordModule<TModule>(this IServiceCollection collection)
     {
         var interfaces = typeof(TModule).GetInterfaces();
@@ -18,13 +23,9 @@ public static class ModuleExtensions
         if (interfaces.Contains(typeof(IDiscordCommand))) AddDiscordCommandModule(collection, typeof(TModule));
         if (interfaces.Contains(typeof(IDiscordEvent))) AddDiscordEventModule(collection, typeof(TModule));
         if (interfaces.Contains(typeof(IDiscordInteraction))) AddDiscordInteractionModule(collection, typeof(TModule));
-        return collection;
-    }
 
-    public static IServiceCollection AddDiscordCommandModule<TCommandModule>(this IServiceCollection collection)
-        where TCommandModule : class, IDiscordCommand
-    {
-        AddDiscordCommandModule(collection, typeof(TCommandModule));
+        collection.AddScoped(typeof(TModule));
+        
         return collection;
     }
 
@@ -53,6 +54,8 @@ public static class ModuleExtensions
                     collection.AddScoped(typeof(IGlobalSlashCommand), moduleType);
                 if (type == typeof(IGuildSlashCommand))
                     collection.AddScoped(typeof(IGuildSlashCommand), moduleType);
+                if (type == typeof(ISlashCommandAutocomplete))
+                    collection.AddScoped(typeof(ISlashCommandAutocomplete), moduleType);
 
                 #endregion
 
@@ -77,25 +80,8 @@ public static class ModuleExtensions
                     collection.AddScoped(typeof(IGuildMessageCommand), moduleType);
 
                 #endregion
-
-                #region Autocomplete
-
-                if (type == typeof(ICommandAutocomplete))
-                    collection.AddScoped(typeof(ICommandAutocomplete), moduleType);
-                if (type == typeof(IGlobalCommandAutocomplete))
-                    collection.AddScoped(typeof(IGlobalCommandAutocomplete), moduleType);
-                if (type == typeof(IGuildCommandAutocomplete))
-                    collection.AddScoped(typeof(IGuildCommandAutocomplete), moduleType);
-
-                #endregion
+                
             }
-    }
-
-    public static IServiceCollection AddDiscordEventModule<TEventModule>(this IServiceCollection collection)
-        where TEventModule : class, IDiscordEvent
-    {
-        AddDiscordEventModule(collection, typeof(TEventModule));
-        return collection;
     }
 
     private static void AddDiscordEventModule(IServiceCollection collection, Type moduleType)
@@ -147,13 +133,6 @@ public static class ModuleExtensions
                 #endregion
             }
         }
-    }
-
-    public static IServiceCollection AddDiscordInteractionModule<TInteractionModule>(this IServiceCollection collection)
-        where TInteractionModule : class, IDiscordInteraction
-    {
-        AddDiscordInteractionModule(collection, typeof(TInteractionModule));
-        return collection;
     }
 
     private static void AddDiscordInteractionModule(IServiceCollection collection, Type moduleType)

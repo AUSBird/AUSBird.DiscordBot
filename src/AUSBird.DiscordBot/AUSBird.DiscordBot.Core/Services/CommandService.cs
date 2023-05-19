@@ -1,8 +1,4 @@
 using AUSBird.DiscordBot.Abstraction.Modules;
-using AUSBird.DiscordBot.Abstraction.Modules.CommandAutocomplete;
-using AUSBird.DiscordBot.Abstraction.Modules.MessageCommands;
-using AUSBird.DiscordBot.Abstraction.Modules.SlashCommands;
-using AUSBird.DiscordBot.Abstraction.Modules.UserCommands;
 using AUSBird.DiscordBot.Abstraction.Services;
 using Discord;
 using Discord.WebSocket;
@@ -11,20 +7,23 @@ using Microsoft.Extensions.Logging;
 
 namespace AUSBird.DiscordBot.Services;
 
-public class DiscordCommandService : IDiscordCommandService, IDisposable
+public class CommandService : ICommandService
 {
-    private readonly ILogger<DiscordCommandService> _logger;
-    private readonly IServiceScope _serviceScope;
+    private readonly ILogger<CommandService> _logger;
+    private readonly IServiceProvider _serviceProvider;
+    private readonly ICommandModuleMapper _commandModuleMapper;
 
-    public DiscordCommandService(ILogger<DiscordCommandService> logger, IServiceScopeFactory scopeFactory)
+    public CommandService(ILogger<CommandService> logger, IServiceProvider serviceProvider,
+        ICommandModuleMapper commandModuleMapper)
     {
         _logger = logger;
-        _serviceScope = scopeFactory.CreateScope();
+        _serviceProvider = serviceProvider;
+        _commandModuleMapper = commandModuleMapper;
     }
 
     public async Task ExecuteSlashCommandAsync(SocketSlashCommand socketCommand)
     {
-        var command = GetGlobalSlashCommandModule(socketCommand.Data.Name);
+        var command = _commandModuleMapper.GetSlashCommandModule(socketCommand.CommandId);
         if (command == null)
         {
             _logger.LogWarning("Unable to find slash command service for {Command}", socketCommand.Data.Name);
@@ -46,7 +45,7 @@ public class DiscordCommandService : IDiscordCommandService, IDisposable
 
     public async Task ExecuteUserCommandAsync(SocketUserCommand socketCommand)
     {
-        var command = GetUserCommandModule(socketCommand.Data.Name);
+        var command = _commandModuleMapper.GetUserCommandModule(socketCommand.CommandId);
         if (command == null)
         {
             _logger.LogWarning("Unable to find user command service for {Command}", socketCommand.Data.Name);
@@ -68,7 +67,7 @@ public class DiscordCommandService : IDiscordCommandService, IDisposable
 
     public async Task ExecuteMessageCommandAsync(SocketMessageCommand socketCommand)
     {
-        var command = GetMessageCommandModule(socketCommand.Data.Name);
+        var command = _commandModuleMapper.GetMessageCommandModule(socketCommand.CommandId);
         if (command == null)
         {
             _logger.LogWarning("Unable to find message command service for {Command}", socketCommand.Data.Name);
@@ -90,7 +89,7 @@ public class DiscordCommandService : IDiscordCommandService, IDisposable
 
     public async Task ExecuteAutocompleteAsync(SocketAutocompleteInteraction autocomplete)
     {
-        var command = GetAutocompleteCommandModule(autocomplete.Data.CommandName);
+        var command = _commandModuleMapper.GetAutocompleteModule(autocomplete.Data.CommandId);
         if (command == null)
         {
             _logger.LogWarning("Unable to find autocomplete service for {Command}", autocomplete.Data.CommandName);
@@ -106,69 +105,9 @@ public class DiscordCommandService : IDiscordCommandService, IDisposable
         }
     }
 
-    public IEnumerable<string> ListSlashCommandIds()
-    {
-        return GetModules<IGlobalSlashCommand>().Select(x => x.SlashCommandId);
-    }
-
-    public IEnumerable<string> ListUserCommandIds()
-    {
-        return GetModules<IGlobalUserCommand>().Select(x => x.UserCommandId);
-    }
-
-    public IEnumerable<string> ListMessageCommandIds()
-    {
-        return GetModules<IGlobalMessageCommand>().Select(x => x.MessageCommandId);
-    }
-
-    public IEnumerable<ApplicationCommandProperties> BuildGlobalCommandsModulesAsync()
-    {
-        var slashCommands = new List<ApplicationCommandProperties>();
-
-        foreach (var module in GetModules<IDiscordCommand>())
-        {
-            if (module is ISlashCommand slashCommand)
-                slashCommands.Add(slashCommand.BuildSlashCommand().Build());
-            if (module is IUserCommand userCommand)
-                slashCommands.Add(userCommand.BuildUserCommand().Build());
-            if (module is IMessageCommand messageCommand)
-                slashCommands.Add(messageCommand.BuildMessageCommand().Build());
-        }
-
-        return slashCommands;
-    }
-
-    public void Dispose()
-    {
-        _serviceScope.Dispose();
-    }
-
 
     private IEnumerable<TCommand> GetModules<TCommand>() where TCommand : IDiscordCommand
     {
-        return _serviceScope.ServiceProvider.GetServices<TCommand>();
-    }
-
-    private ISlashCommand? GetGlobalSlashCommandModule(string name)
-    {
-        return GetModules<IGlobalSlashCommand>()
-            .FirstOrDefault(x => x.SlashCommandId == name);
-    }
-
-    private IUserCommand? GetUserCommandModule(string name)
-    {
-        return GetModules<IUserCommand>()
-            .FirstOrDefault(x => x.UserCommandId == name);
-    }
-
-    private IMessageCommand? GetMessageCommandModule(string name)
-    {
-        return GetModules<IMessageCommand>()
-            .FirstOrDefault(x => x.MessageCommandId == name);
-    }
-
-    private ICommandAutocomplete? GetAutocompleteCommandModule(string name)
-    {
-        return GetModules<ICommandAutocomplete>().FirstOrDefault(x => x.SlashCommandId == name);
+        return _serviceProvider.GetServices<TCommand>();
     }
 }

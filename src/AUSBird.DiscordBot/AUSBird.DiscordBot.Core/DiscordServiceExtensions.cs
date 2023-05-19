@@ -1,3 +1,4 @@
+using AUSBird.DiscordBot.Abstraction.Modules;
 using AUSBird.DiscordBot.Abstraction.Services;
 using AUSBird.DiscordBot.Services;
 using Microsoft.Extensions.Configuration;
@@ -8,13 +9,14 @@ namespace AUSBird.DiscordBot;
 public static class DiscordServiceExtensions
 {
     public static IServiceCollection AddDiscordSocketBot(this IServiceCollection collection,
-        IConfigurationSection configuration)
+        IConfiguration configuration)
     {
         collection.AddHostedService<DiscordHostedService>();
         collection.AddSingleton<IDiscordService, DiscordService>();
-        collection.AddSingleton<IDiscordCommandService, DiscordCommandService>();
-        collection.AddSingleton<IDiscordEventService, DiscordEventService>();
-        collection.AddSingleton<IDiscordInteractionService, DiscordInteractionService>();
+        collection.AddSingleton<ICommandService, CommandService>();
+        collection.AddSingleton<IEventService, EventService>();
+        collection.AddSingleton<IInteractionService, InteractionService>();
+        collection.AddSingleton<ICommandModuleMapper, CommandModuleMapper>();
         collection.Configure<DiscordServiceConfig>(configuration);
         return collection;
     }

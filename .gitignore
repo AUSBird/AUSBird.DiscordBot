@@ -628,3 +628,5 @@ fabric.properties
 .build/
 
 tmp/
+
+src/AUSBird.DiscordBot/TestBot/settings.json

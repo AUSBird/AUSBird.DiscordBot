@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AUSBird.DiscordBot", "AUSBi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AUSBird.DiscordBot.Abstraction", "AUSBird.DiscordBot.Abstraction\AUSBird.DiscordBot.Abstraction.csproj", "{17083483-C4B6-415A-8DAD-669420DF659E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestBot", "TestBot\TestBot.csproj", "{CC6CFF5F-9060-40F4-BABB-DE0CEA02B97F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{17083483-C4B6-415A-8DAD-669420DF659E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{17083483-C4B6-415A-8DAD-669420DF659E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{17083483-C4B6-415A-8DAD-669420DF659E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC6CFF5F-9060-40F4-BABB-DE0CEA02B97F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC6CFF5F-9060-40F4-BABB-DE0CEA02B97F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC6CFF5F-9060-40F4-BABB-DE0CEA02B97F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC6CFF5F-9060-40F4-BABB-DE0CEA02B97F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
