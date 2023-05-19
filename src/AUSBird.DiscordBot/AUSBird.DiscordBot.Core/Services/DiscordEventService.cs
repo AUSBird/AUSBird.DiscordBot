@@ -1,4 +1,5 @@
-using AUSBird.DiscordBot.Interfaces;
+using AUSBird.DiscordBot.Abstraction.Modules;
+using AUSBird.DiscordBot.Abstraction.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 

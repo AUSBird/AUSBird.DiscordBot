@@ -1,4 +1,4 @@
-using Discord;
+using AUSBird.DiscordBot.Abstraction.Services;
 using Discord.WebSocket;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -55,12 +55,8 @@ public partial class DiscordHostedService : IHostedService, IDisposable
 
     private async Task OnReady(DiscordSocketClient readyEvent)
     {
-        await _discordService.GetDiscordClient().SetStatusAsync(UserStatus.DoNotDisturb);
-
-        var commands = await _commandService.BuildCommandsModulesAsync();
+        var commands = _commandService.BuildGlobalCommandsModulesAsync();
         await _discordService.GetDiscordClient().Rest.BulkOverwriteGlobalCommands(commands.ToArray());
-
-        await _discordService.GetDiscordClient().SetStatusAsync(UserStatus.Online);
     }
 
     #endregion

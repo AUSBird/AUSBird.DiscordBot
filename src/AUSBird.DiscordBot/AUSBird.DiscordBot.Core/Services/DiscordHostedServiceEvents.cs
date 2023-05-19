@@ -1,5 +1,5 @@
-using AUSBird.DiscordBot.Interfaces;
-using AUSBird.DiscordBot.Interfaces.Events;
+using AUSBird.DiscordBot.Abstraction.Modules;
+using AUSBird.DiscordBot.Abstraction.Modules.Events;
 using Discord;
 using Discord.WebSocket;
 using Microsoft.Extensions.Logging;

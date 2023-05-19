@@ -1,8 +1,9 @@
-using AUSBird.DiscordBot.Interfaces;
-using AUSBird.DiscordBot.Interfaces.CommandAutocomplete;
-using AUSBird.DiscordBot.Interfaces.MessageCommands;
-using AUSBird.DiscordBot.Interfaces.SlashCommands;
-using AUSBird.DiscordBot.Interfaces.UserCommands;
+using AUSBird.DiscordBot.Abstraction.Modules;
+using AUSBird.DiscordBot.Abstraction.Modules.CommandAutocomplete;
+using AUSBird.DiscordBot.Abstraction.Modules.MessageCommands;
+using AUSBird.DiscordBot.Abstraction.Modules.SlashCommands;
+using AUSBird.DiscordBot.Abstraction.Modules.UserCommands;
+using AUSBird.DiscordBot.Abstraction.Services;
 using Discord;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,7 +24,7 @@ public class DiscordCommandService : IDiscordCommandService, IDisposable
 
     public async Task ExecuteSlashCommandAsync(SocketSlashCommand socketCommand)
     {
-        var command = GetSlashCommandModule(socketCommand.Data.Name);
+        var command = GetGlobalSlashCommandModule(socketCommand.Data.Name);
         if (command == null)
         {
             _logger.LogWarning("Unable to find slash command service for {Command}", socketCommand.Data.Name);
@@ -120,7 +121,7 @@ public class DiscordCommandService : IDiscordCommandService, IDisposable
         return GetModules<IGlobalMessageCommand>().Select(x => x.MessageCommandId);
     }
 
-    public async Task<IEnumerable<ApplicationCommandProperties>> BuildCommandsModulesAsync()
+    public IEnumerable<ApplicationCommandProperties> BuildGlobalCommandsModulesAsync()
     {
         var slashCommands = new List<ApplicationCommandProperties>();
 
@@ -148,9 +149,9 @@ public class DiscordCommandService : IDiscordCommandService, IDisposable
         return _serviceScope.ServiceProvider.GetServices<TCommand>();
     }
 
-    private ISlashCommand? GetSlashCommandModule(string name)
+    private ISlashCommand? GetGlobalSlashCommandModule(string name)
     {
-        return GetModules<ISlashCommand>()
+        return GetModules<IGlobalSlashCommand>()
             .FirstOrDefault(x => x.SlashCommandId == name);
     }
 

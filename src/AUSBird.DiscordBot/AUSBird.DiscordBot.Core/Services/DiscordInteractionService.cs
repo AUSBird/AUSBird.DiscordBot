@@ -1,9 +1,10 @@
-using AUSBird.DiscordBot.Interfaces.Interactions;
+using AUSBird.DiscordBot.Abstraction.Modules.Interactions;
+using AUSBird.DiscordBot.Abstraction.Services;
 using Discord;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using IDiscordInteraction = AUSBird.DiscordBot.Interfaces.IDiscordInteraction;
+using IDiscordInteraction = AUSBird.DiscordBot.Abstraction.Modules.IDiscordInteraction;
 
 namespace AUSBird.DiscordBot.Services;
 
