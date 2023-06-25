@@ -21,7 +21,7 @@ public class DiscordService : IDiscordService
 
         _discordClient = new DiscordShardedClient(_options.GetShardIds(), new DiscordSocketConfig
         {
-            GatewayIntents = GatewayIntents.AllUnprivileged | GatewayIntents.GuildMembers,
+            GatewayIntents = GatewayIntents.All,
             TotalShards = _options.TotalShards
         });
         _discordClient.ShardReady += OnShardReady;
