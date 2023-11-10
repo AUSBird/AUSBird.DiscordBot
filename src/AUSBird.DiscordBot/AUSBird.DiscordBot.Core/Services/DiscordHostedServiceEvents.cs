@@ -23,6 +23,134 @@ public partial class DiscordHostedService
         return eventHandler.GetType().FullName ?? eventHandler.GetType().Name;
     }
 
+    #region Discord Message Events
+
+    private async Task OnMessageReceived(SocketMessage message)
+    {
+        var eventHandlers = _eventService.ListEventHandlers<IDiscordMessageReceivedEvent>().ToList();
+        LogEventHandling(nameof(IDiscordMessageReceivedEvent), eventHandlers.Count);
+
+        foreach (var eventHandler in eventHandlers)
+            try
+            {
+                LogEventHandlerCalled(nameof(IDiscordMessageReceivedEvent), GetHandlerName(eventHandler));
+                await eventHandler.HandleDiscordMessageReceivedEvent(message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An unhandled exception was encountered while handling message received event");
+            }
+    }
+
+    private async Task OnMessageUpdated(Cacheable<IMessage, ulong> previous, SocketMessage message,
+        ISocketMessageChannel channel)
+    {
+        var eventHandlers = _eventService.ListEventHandlers<IDiscordMessageUpdatedEvent>().ToList();
+        LogEventHandling(nameof(IDiscordMessageUpdatedEvent), eventHandlers.Count);
+
+        foreach (var eventHandler in eventHandlers)
+            try
+            {
+                LogEventHandlerCalled(nameof(IDiscordMessageUpdatedEvent), GetHandlerName(eventHandler));
+                await eventHandler.HandleDiscordMessageUpdatedEvent(previous, message, channel);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An unhandled exception was encountered while handling message updated event");
+            }
+    }
+
+    private async Task OnMessageDeleted(Cacheable<IMessage, ulong> message, Cacheable<IMessageChannel, ulong> channel)
+    {
+        var eventHandlers = _eventService.ListEventHandlers<IDiscordMessageDeletedEvent>().ToList();
+        LogEventHandling(nameof(IDiscordMessageDeletedEvent), eventHandlers.Count);
+
+        foreach (var eventHandler in eventHandlers)
+            try
+            {
+                LogEventHandlerCalled(nameof(IDiscordMessageDeletedEvent), GetHandlerName(eventHandler));
+                await eventHandler.HandleDiscordMessageReceivedEvent(message, channel);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An unhandled exception was encountered while handling message deleted event");
+            }
+    }
+
+    #endregion
+
+    #region Discord Guild Events
+
+    private async Task OnJoinedGuild(SocketGuild guild)
+    {
+        var eventHandlers = _eventService.ListEventHandlers<IDiscordGuildJoinedEvent>().ToList();
+        LogEventHandling(nameof(IDiscordGuildJoinedEvent), eventHandlers.Count);
+
+        foreach (var eventHandler in eventHandlers)
+            try
+            {
+                LogEventHandlerCalled(nameof(IDiscordGuildJoinedEvent), GetHandlerName(eventHandler));
+                await eventHandler.HandleDiscordGuildJoinedEvent(guild);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An unhandled exception was encountered while handling guild joined event");
+            }
+    }
+
+    private async Task OnLeftGuild(SocketGuild guild)
+    {
+        var eventHandlers = _eventService.ListEventHandlers<IDiscordGuildLeftEvent>().ToList();
+        LogEventHandling(nameof(IDiscordGuildLeftEvent), eventHandlers.Count);
+
+        foreach (var eventHandler in eventHandlers)
+            try
+            {
+                LogEventHandlerCalled(nameof(IDiscordGuildLeftEvent), GetHandlerName(eventHandler));
+                await eventHandler.HandleDiscordGuildLeftEvent(guild);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An unhandled exception was encountered while handling guild left event");
+            }
+    }
+
+    private async Task OnGuildUpdated(SocketGuild before, SocketGuild after)
+    {
+        var eventHandlers = _eventService.ListEventHandlers<IDiscordGuildUpdatedEvent>().ToList();
+        LogEventHandling(nameof(IDiscordGuildUpdatedEvent), eventHandlers.Count);
+
+        foreach (var eventHandler in eventHandlers)
+            try
+            {
+                LogEventHandlerCalled(nameof(IDiscordGuildUpdatedEvent), GetHandlerName(eventHandler));
+                await eventHandler.HandleDiscordGuildUpdatedEvent(before, after);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An unhandled exception was encountered while handling guild updated event");
+            }
+    }
+
+    private async Task OnGuildAvailable(SocketGuild guild)
+    {
+        var eventHandlers = _eventService.ListEventHandlers<IDiscordGuildAvailableEvent>().ToList();
+        LogEventHandling(nameof(IDiscordGuildAvailableEvent), eventHandlers.Count);
+
+        foreach (var eventHandler in eventHandlers)
+            try
+            {
+                LogEventHandlerCalled(nameof(IDiscordGuildAvailableEvent), GetHandlerName(eventHandler));
+                await eventHandler.HandleDiscordGuildAvailableEvent(guild);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An unhandled exception was encountered while handling guild updated event");
+            }
+    }
+
+    #endregion
+
     #region Discord Reaction Events
 
     private async Task OnReactionAdded(Cacheable<IUserMessage, ulong> message,
@@ -235,6 +363,23 @@ public partial class DiscordHostedService
             {
                 LogEventHandlerCalled(nameof(IDiscordUserUpdatedEvent), GetHandlerName(eventHandler));
                 await eventHandler.HandleDiscordUserUpdatedEvent(before, after);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An unhandled exception was encountered while handling user updated event");
+            }
+    }
+
+    private async Task OnGuildMemberUpdated(Cacheable<SocketGuildUser, ulong> before, SocketGuildUser after)
+    {
+        var eventHandlers = _eventService.ListEventHandlers<IDiscordGuildMemberUpdatedEvent>().ToList();
+        LogEventHandling(nameof(IDiscordGuildMemberUpdatedEvent), eventHandlers.Count);
+
+        foreach (var eventHandler in eventHandlers)
+            try
+            {
+                LogEventHandlerCalled(nameof(IDiscordGuildMemberUpdatedEvent), GetHandlerName(eventHandler));
+                await eventHandler.HandleDiscordGuildMemberUpdatedEvent(before, after);
             }
             catch (Exception ex)
             {

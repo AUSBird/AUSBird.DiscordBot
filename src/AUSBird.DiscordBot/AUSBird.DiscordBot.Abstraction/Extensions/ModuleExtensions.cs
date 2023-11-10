@@ -15,7 +15,7 @@ public static class ModuleExtensions
     {
         return services.GetServices<TCommand>();
     }
-    
+
     public static IServiceCollection AddDiscordModule<TModule>(this IServiceCollection collection)
     {
         var interfaces = typeof(TModule).GetInterfaces();
@@ -25,7 +25,7 @@ public static class ModuleExtensions
         if (interfaces.Contains(typeof(IDiscordInteraction))) AddDiscordInteractionModule(collection, typeof(TModule));
 
         collection.AddScoped(typeof(TModule));
-        
+
         return collection;
     }
 
@@ -80,7 +80,6 @@ public static class ModuleExtensions
                     collection.AddScoped(typeof(IGuildMessageCommand), moduleType);
 
                 #endregion
-                
             }
     }
 
@@ -93,6 +92,30 @@ public static class ModuleExtensions
 
             foreach (var type in interfaces)
             {
+                #region Guild Events
+
+                if (type == typeof(IDiscordGuildJoinedEvent))
+                    collection.AddScoped(typeof(IDiscordGuildJoinedEvent), moduleType);
+                if (type == typeof(IDiscordGuildLeftEvent))
+                    collection.AddScoped(typeof(IDiscordGuildLeftEvent), moduleType);
+                if (type == typeof(IDiscordGuildUpdatedEvent))
+                    collection.AddScoped(typeof(IDiscordGuildUpdatedEvent), moduleType);
+                if (type == typeof(IDiscordGuildAvailableEvent))
+                    collection.AddScoped(typeof(IDiscordGuildAvailableEvent), moduleType);
+
+                #endregion
+
+                #region Message Events
+
+                if (type == typeof(IDiscordMessageReceivedEvent))
+                    collection.AddScoped(typeof(IDiscordMessageReceivedEvent), moduleType);
+                if (type == typeof(IDiscordMessageUpdatedEvent))
+                    collection.AddScoped(typeof(IDiscordMessageUpdatedEvent), moduleType);
+                if (type == typeof(IDiscordMessageDeletedEvent))
+                    collection.AddScoped(typeof(IDiscordMessageDeletedEvent), moduleType);
+
+                #endregion
+
                 #region Reaction Events
 
                 if (type == typeof(IDiscordReactionAddedEvent))
@@ -129,6 +152,8 @@ public static class ModuleExtensions
                     collection.AddScoped(typeof(IDiscordUserUnbannedEvent), moduleType);
                 if (type == typeof(IDiscordUserUpdatedEvent))
                     collection.AddScoped(typeof(IDiscordUserUpdatedEvent), moduleType);
+                if (type == typeof(IDiscordGuildMemberUpdatedEvent))
+                    collection.AddScoped(typeof(IDiscordGuildMemberUpdatedEvent), moduleType);
 
                 #endregion
             }

@@ -34,6 +34,15 @@ public partial class DiscordHostedService : IHostedService, IDisposable
 
         // System
         _discordService.GetDiscordClient().ShardReady += OnReady;
+        // Messages
+        _discordService.GetDiscordClient().MessageReceived += OnMessageReceived;
+        _discordService.GetDiscordClient().MessageUpdated += OnMessageUpdated;
+        _discordService.GetDiscordClient().MessageDeleted += OnMessageDeleted;
+        // Guilds
+        _discordService.GetDiscordClient().JoinedGuild += OnJoinedGuild;
+        _discordService.GetDiscordClient().LeftGuild += OnLeftGuild;
+        _discordService.GetDiscordClient().GuildUpdated += OnGuildUpdated;
+        _discordService.GetDiscordClient().GuildAvailable += OnGuildAvailable;
         // Roles
         _discordService.GetDiscordClient().RoleCreated += OnRoleCreated;
         _discordService.GetDiscordClient().RoleDeleted += OnRoleDeleted;
@@ -44,6 +53,7 @@ public partial class DiscordHostedService : IHostedService, IDisposable
         _discordService.GetDiscordClient().UserLeft += OnUserLeft;
         _discordService.GetDiscordClient().UserUnbanned += OnUserUnbanned;
         _discordService.GetDiscordClient().UserUpdated += OnUserUpdated;
+        _discordService.GetDiscordClient().GuildMemberUpdated += OnGuildMemberUpdated;
         // Interactions
         _discordService.GetDiscordClient().SlashCommandExecuted += OnSlashCommandExecuted;
         _discordService.GetDiscordClient().UserCommandExecuted += OnUserCommandExecuted;
