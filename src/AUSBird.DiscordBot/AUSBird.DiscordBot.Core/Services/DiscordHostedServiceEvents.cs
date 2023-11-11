@@ -69,7 +69,7 @@ public partial class DiscordHostedService
             try
             {
                 LogEventHandlerCalled(nameof(IDiscordMessageDeletedEvent), GetHandlerName(eventHandler));
-                await eventHandler.HandleDiscordMessageReceivedEvent(message, channel);
+                await eventHandler.HandleDiscordMessageDeletedEvent(message, channel);
             }
             catch (Exception ex)
             {
