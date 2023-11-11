@@ -1,8 +1,10 @@
 using AUSBird.DiscordBot.Abstraction.Modules;
 using AUSBird.DiscordBot.Abstraction.Services;
 using AUSBird.DiscordBot.Services;
+using Discord.Rest;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace AUSBird.DiscordBot;
 
@@ -18,6 +20,7 @@ public static class DiscordServiceExtensions
         collection.AddSingleton<IInteractionService, InteractionService>();
         collection.AddSingleton<ICommandModuleMapper, CommandModuleMapper>();
         collection.Configure<DiscordServiceConfig>(configuration);
+        
         return collection;
     }
 }

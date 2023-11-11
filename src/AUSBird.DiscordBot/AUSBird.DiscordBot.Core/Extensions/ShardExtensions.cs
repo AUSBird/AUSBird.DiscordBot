@@ -8,7 +8,7 @@ public static class ShardExtensions
 {
     public static DiscordSocketClient GetChannelShard(this IDiscordService service, ISocketMessageChannel channel)
     {
-        return service.GetDiscordClient().GetChannelShard(channel);
+        return service.GetDiscordSocketClient().GetChannelShard(channel);
     }
 
     public static DiscordSocketClient GetChannelShard(this DiscordShardedClient client, ISocketMessageChannel channel)

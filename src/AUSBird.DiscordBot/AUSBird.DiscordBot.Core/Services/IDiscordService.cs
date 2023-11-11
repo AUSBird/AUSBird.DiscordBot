@@ -1,3 +1,4 @@
+using Discord.Rest;
 using Discord.WebSocket;
 
 namespace AUSBird.DiscordBot.Services;
@@ -9,5 +10,6 @@ public interface IDiscordService : IDisposable
     int TotalShards { get; }
     Task StartupAsync();
     Task ShutdownAsync();
-    DiscordShardedClient GetDiscordClient();
+    DiscordShardedClient GetDiscordSocketClient();
+    DiscordRestClient GetDiscordRestClient();
 }

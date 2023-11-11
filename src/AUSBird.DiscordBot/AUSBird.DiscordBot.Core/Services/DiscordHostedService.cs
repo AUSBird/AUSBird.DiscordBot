@@ -33,39 +33,39 @@ public partial class DiscordHostedService : IHostedService, IDisposable
         _serviceProvider = serviceProvider;
 
         // System
-        _discordService.GetDiscordClient().ShardReady += OnReady;
+        _discordService.GetDiscordSocketClient().ShardReady += OnReady;
         // Messages
-        _discordService.GetDiscordClient().MessageReceived += OnMessageReceived;
-        _discordService.GetDiscordClient().MessageUpdated += OnMessageUpdated;
-        _discordService.GetDiscordClient().MessageDeleted += OnMessageDeleted;
+        _discordService.GetDiscordSocketClient().MessageReceived += OnMessageReceived;
+        _discordService.GetDiscordSocketClient().MessageUpdated += OnMessageUpdated;
+        _discordService.GetDiscordSocketClient().MessageDeleted += OnMessageDeleted;
         // Guilds
-        _discordService.GetDiscordClient().JoinedGuild += OnJoinedGuild;
-        _discordService.GetDiscordClient().LeftGuild += OnLeftGuild;
-        _discordService.GetDiscordClient().GuildUpdated += OnGuildUpdated;
-        _discordService.GetDiscordClient().GuildAvailable += OnGuildAvailable;
+        _discordService.GetDiscordSocketClient().JoinedGuild += OnJoinedGuild;
+        _discordService.GetDiscordSocketClient().LeftGuild += OnLeftGuild;
+        _discordService.GetDiscordSocketClient().GuildUpdated += OnGuildUpdated;
+        _discordService.GetDiscordSocketClient().GuildAvailable += OnGuildAvailable;
         // Roles
-        _discordService.GetDiscordClient().RoleCreated += OnRoleCreated;
-        _discordService.GetDiscordClient().RoleDeleted += OnRoleDeleted;
-        _discordService.GetDiscordClient().RoleUpdated += OnRoleUpdated;
+        _discordService.GetDiscordSocketClient().RoleCreated += OnRoleCreated;
+        _discordService.GetDiscordSocketClient().RoleDeleted += OnRoleDeleted;
+        _discordService.GetDiscordSocketClient().RoleUpdated += OnRoleUpdated;
         // User
-        _discordService.GetDiscordClient().UserBanned += OnUserBanned;
-        _discordService.GetDiscordClient().UserJoined += OnUserJoined;
-        _discordService.GetDiscordClient().UserLeft += OnUserLeft;
-        _discordService.GetDiscordClient().UserUnbanned += OnUserUnbanned;
-        _discordService.GetDiscordClient().UserUpdated += OnUserUpdated;
-        _discordService.GetDiscordClient().GuildMemberUpdated += OnGuildMemberUpdated;
+        _discordService.GetDiscordSocketClient().UserBanned += OnUserBanned;
+        _discordService.GetDiscordSocketClient().UserJoined += OnUserJoined;
+        _discordService.GetDiscordSocketClient().UserLeft += OnUserLeft;
+        _discordService.GetDiscordSocketClient().UserUnbanned += OnUserUnbanned;
+        _discordService.GetDiscordSocketClient().UserUpdated += OnUserUpdated;
+        _discordService.GetDiscordSocketClient().GuildMemberUpdated += OnGuildMemberUpdated;
         // Interactions
-        _discordService.GetDiscordClient().SlashCommandExecuted += OnSlashCommandExecuted;
-        _discordService.GetDiscordClient().UserCommandExecuted += OnUserCommandExecuted;
-        _discordService.GetDiscordClient().MessageCommandExecuted += OnMessageCommandExecuted;
-        _discordService.GetDiscordClient().AutocompleteExecuted += OnAutocompleteExecuted;
-        _discordService.GetDiscordClient().ModalSubmitted += OnModalSubmitted;
-        _discordService.GetDiscordClient().ButtonExecuted += OnButtonExecuted;
+        _discordService.GetDiscordSocketClient().SlashCommandExecuted += OnSlashCommandExecuted;
+        _discordService.GetDiscordSocketClient().UserCommandExecuted += OnUserCommandExecuted;
+        _discordService.GetDiscordSocketClient().MessageCommandExecuted += OnMessageCommandExecuted;
+        _discordService.GetDiscordSocketClient().AutocompleteExecuted += OnAutocompleteExecuted;
+        _discordService.GetDiscordSocketClient().ModalSubmitted += OnModalSubmitted;
+        _discordService.GetDiscordSocketClient().ButtonExecuted += OnButtonExecuted;
         // Reactions
-        _discordService.GetDiscordClient().ReactionAdded += OnReactionAdded;
-        _discordService.GetDiscordClient().ReactionRemoved += OnReactionRemoved;
-        _discordService.GetDiscordClient().ReactionsCleared += OnReactionsCleared;
-        _discordService.GetDiscordClient().ReactionsRemovedForEmote += OnReactionsRemovedForEmote;
+        _discordService.GetDiscordSocketClient().ReactionAdded += OnReactionAdded;
+        _discordService.GetDiscordSocketClient().ReactionRemoved += OnReactionRemoved;
+        _discordService.GetDiscordSocketClient().ReactionsCleared += OnReactionsCleared;
+        _discordService.GetDiscordSocketClient().ReactionsRemovedForEmote += OnReactionsRemovedForEmote;
     }
 
     // Events
@@ -74,7 +74,7 @@ public partial class DiscordHostedService : IHostedService, IDisposable
 
     private async Task OnReady(DiscordSocketClient readyEvent)
     {
-        var discordRest = _discordService.GetDiscordClient().Rest;
+        var discordRest = _discordService.GetDiscordSocketClient().Rest;
 
         foreach (var module in _serviceProvider.GetModules<IDiscordCommand>())
         {

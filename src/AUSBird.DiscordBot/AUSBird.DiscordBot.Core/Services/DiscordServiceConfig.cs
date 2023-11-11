@@ -3,6 +3,7 @@ namespace AUSBird.DiscordBot.Services;
 public class DiscordServiceConfig
 {
     public ulong ApplicationId { get; set; }
+    public string? ClientSecret { get; set; }
     public string PublicKey { get; set; }
     public string BotToken { get; set; }
     public int NodeId { get; set; }
