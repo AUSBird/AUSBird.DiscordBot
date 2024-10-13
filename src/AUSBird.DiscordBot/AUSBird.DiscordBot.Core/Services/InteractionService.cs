@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using AUSBird.DiscordBot.Abstraction.Modules.Interactions;
 using AUSBird.DiscordBot.Abstraction.Services;
 using Discord;
@@ -46,7 +47,7 @@ public class InteractionService : IInteractionService
     public async Task MessageComponentInteractedAsync(SocketMessageComponent component)
     {
         var module = GetModules<IDiscordComponentInteraction>()
-            .FirstOrDefault(x => x.ComponentIds.Contains(component.Data.CustomId));
+            .FirstOrDefault(x => ModuleHandlesInteraction(x.ComponentIds, component.Data.CustomId));
 
         if (module == null)
         {
@@ -70,6 +71,16 @@ public class InteractionService : IInteractionService
     }
 
     #region Helpers
+
+    private bool ModuleHandlesInteraction(Regex[] patterns, string id)
+    {
+        foreach (var pattern in patterns)
+        {
+            if (pattern.IsMatch(id)) return true;
+        }
+
+        return false;
+    }
 
     private IEnumerable<TInteraction> GetModules<TInteraction>() where TInteraction : IDiscordInteraction
     {
