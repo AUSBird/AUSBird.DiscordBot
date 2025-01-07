@@ -9,6 +9,7 @@ public class DiscordServiceConfig
     public int NodeId { get; set; }
     public int ShardsPerNode { get; set; }
     public int TotalShards { get; set; }
+    public string GatewayIntents { get; set; }
 
     public int[] GetShardIds()
     {

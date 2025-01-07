@@ -26,7 +26,7 @@ public class DiscordService : IDiscordService
 
         _discordSocketClient = new DiscordShardedClient(_options.GetShardIds(), new DiscordSocketConfig
         {
-            GatewayIntents = GatewayIntents.All,
+            GatewayIntents = Enum.Parse<GatewayIntents>(_options.GatewayIntents),
             TotalShards = _options.TotalShards
         });
         _discordRestClient = new DiscordRestClient(new DiscordRestConfig()
