@@ -22,7 +22,8 @@ public class InteractionService : IInteractionService
 
     public async Task ModalSubmittedAsync(SocketModal modal)
     {
-        var module = GetModules<IDiscordModalSubmit>().FirstOrDefault(x => x.ModalId == modal.Data.CustomId);
+        var module = GetModules<IDiscordModalSubmit>()
+            .FirstOrDefault(x => ModuleHandlesInteraction(x.ModalIds, modal.Data.CustomId));
 
         if (module == null)
         {
