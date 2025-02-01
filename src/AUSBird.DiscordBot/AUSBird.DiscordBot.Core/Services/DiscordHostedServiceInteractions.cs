@@ -28,7 +28,8 @@ public partial class DiscordHostedService
         catch (Exception ex)
         {
             _logger.LogError(ex, "An unhandled exception was encountered while performing slash command");
-            await ReplyWithErrorEmbed(command);
+            if (!command.HasResponded)
+                await ReplyWithErrorEmbed(command);
         }
     }
 
@@ -41,7 +42,8 @@ public partial class DiscordHostedService
         catch (Exception ex)
         {
             _logger.LogError(ex, "An unhandled exception was encountered while performing user command");
-            await ReplyWithErrorEmbed(command);
+            if (!command.HasResponded)
+                await ReplyWithErrorEmbed(command);
         }
     }
 
@@ -54,7 +56,8 @@ public partial class DiscordHostedService
         catch (Exception ex)
         {
             _logger.LogError(ex, "An unhandled exception was encountered while performing message command");
-            await ReplyWithErrorEmbed(command);
+            if (!command.HasResponded)
+                await ReplyWithErrorEmbed(command);
         }
     }
 
@@ -67,7 +70,8 @@ public partial class DiscordHostedService
         catch (Exception ex)
         {
             _logger.LogError(ex, "An unhandled exception was encountered while performing autocomplete");
-            await autocomplete.RespondAsync();
+            if (!autocomplete.HasResponded)
+                await autocomplete.RespondAsync();
         }
     }
 
@@ -80,7 +84,8 @@ public partial class DiscordHostedService
         catch (Exception ex)
         {
             _logger.LogError(ex, "An unhandled exception was encountered while performing modal submit");
-            await modal.RespondAsync();
+            if (!modal.HasResponded)
+                await modal.RespondAsync();
         }
     }
 
@@ -93,7 +98,8 @@ public partial class DiscordHostedService
         catch (Exception ex)
         {
             _logger.LogError(ex, "An unhandled exception was encountered while performing button click");
-            await button.RespondAsync();
+            if (!button.HasResponded)
+                await button.RespondAsync();
         }
     }
 
